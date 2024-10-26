@@ -1,11 +1,11 @@
 package com.example.task_manager.entity;
 
-import java.io.ObjectInputFilter.Status;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.example.task_manager.entity.status_enum.Status;
 
 import jakarta.persistence.Id;
 
