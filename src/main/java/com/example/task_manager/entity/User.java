@@ -19,9 +19,9 @@ public class User {
     private String password;
     private boolean isAdmin = false;
     private ROLE role;
-    private Set<Task> tasks;
+    private Set<UUID> tasks;
 
-    public User(UUID userID, String name, String email, String password, boolean isAdmin, ROLE role, Set<Task> tasks) {
+    public User(UUID userID, String name, String email, String password, boolean isAdmin, ROLE role, Set<UUID> tasks) {
         this.userID = userID;
         this.name = name;
         this.email = email;
@@ -81,11 +81,11 @@ public class User {
         this.role = role;
     }
 
-    public Set<Task> getTasks() {
+    public Set<UUID> getTasks() {
         return tasks;
     }
 
-    public void setTasks(Set<Task> tasks) {
+    public void setTasks(Set<UUID> tasks) {
         this.tasks = tasks;
     }
     
