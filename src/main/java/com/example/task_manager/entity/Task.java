@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.example.task_manager.entity.status_enum.Status;
+import com.example.task_manager.entity.entity_enum.Status;
 
 import jakarta.persistence.Id;
 

@@ -1,4 +1,4 @@
-package com.example.task_manager.entity.status_enum;
+package com.example.task_manager.entity.entity_enum;
 
 public enum Status {
 
