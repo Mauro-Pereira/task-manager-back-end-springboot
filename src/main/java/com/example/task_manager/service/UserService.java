@@ -6,8 +6,10 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.example.task_manager.entity.Task;
 import com.example.task_manager.entity.User;
 import com.example.task_manager.entity.entity_enum.ROLE;
+import com.example.task_manager.exception.TaskAlreadyExistsException;
 import com.example.task_manager.exception.UserAlreadyExistsException;
 import com.example.task_manager.exception.UserNotFoundException;
 import com.example.task_manager.repository.TaskRepository;
@@ -107,8 +109,26 @@ public class UserService {
         }
 
         return this.userRepository.save(returnedUser.get());
+    }
 
+    public Task addTask(Task task, UUID idUser){
 
+        
+        Optional<User> returnedUser = this.userRepository.findById(idUser);
+        Optional<Task> returnedTask = this.taskRepository.findById(task.getTaskId());
+
+        if(returnedUser.isEmpty()){
+            throw new UserNotFoundException("User not found");
+        }
+
+        if(returnedTask.isPresent()){
+            throw new TaskAlreadyExistsException("Task Already exists");
+        }
+
+        Task savedTask = this.taskRepository.save(task);
+        returnedUser.get().getTasks().add(savedTask.getTaskId());
+
+        return savedTask;
     }
 
 }
