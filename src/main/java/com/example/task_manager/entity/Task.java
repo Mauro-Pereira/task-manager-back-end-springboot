@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.example.task_manager.entity.entity_enum.Status;
+import com.example.task_manager.entity.entity_enum.STATUS;
 
 import jakarta.persistence.Id;
 
@@ -17,9 +17,9 @@ public class Task {
     private String title;
     private String description;
     private LocalDateTime expirationDate;
-    private Status status;
+    private STATUS status;
     
-    public Task(UUID taskId, String title, String description, LocalDateTime expirationDate, Status status) {
+    public Task(UUID taskId, String title, String description, LocalDateTime expirationDate, STATUS status) {
         this.taskId = taskId;
         this.title = title;
         this.description = description;
@@ -50,10 +50,10 @@ public class Task {
     public void setExpirationDate(LocalDateTime expirationDate) {
         this.expirationDate = expirationDate;
     }
-    public Status getStatus() {
+    public STATUS getStatus() {
         return status;
     }
-    public void setStatus(Status status) {
+    public void setStatus(STATUS status) {
         this.status = status;
     }
 
