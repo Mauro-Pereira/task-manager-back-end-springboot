@@ -2,6 +2,7 @@ package com.example.task_manager.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -129,6 +130,10 @@ public class UserService {
         returnedUser.get().getTasks().add(savedTask.getTaskId());
 
         return savedTask;
+    }
+
+    public Set<Task> listAllTask(){
+        return this.taskRepository.findAll();
     }
 
 }
