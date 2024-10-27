@@ -21,10 +21,12 @@ public class UserService {
 
     private UserRepository userRepository;
     private TaskRepository taskRepository;
+    private List<Task> myOwnTasks;
 
-    public UserService(UserRepository userRepository, TaskRepository taskRepository) {
+    public UserService(UserRepository userRepository, TaskRepository taskRepository, List<Task> myOwnTasks) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
+        this.myOwnTasks = myOwnTasks;
     }
 
     public User saveUser(User user){
@@ -132,8 +134,31 @@ public class UserService {
         return savedTask;
     }
 
-    public Set<Task> listAllTask(){
+    public List<Task> listAllTask(){
         return this.taskRepository.findAll();
+    }
+
+    public List<Task> getMyTasks(UUID userId){
+
+        
+        Optional<User> returnedUser = this.userRepository.findById(userId);
+
+        if(returnedUser.isEmpty()){
+            throw new UserNotFoundException("User not found");
+        }
+
+        returnedUser.get().getTasks().forEach(task ->{
+
+            Optional<Task> returnedTask = this.taskRepository.findById(task);
+
+            if(returnedTask.isPresent()){
+                this.myOwnTasks.add(returnedTask.get());
+            }
+        });
+
+        return this.myOwnTasks;
+
+
     }
 
 }
