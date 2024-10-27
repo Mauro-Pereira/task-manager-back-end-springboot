@@ -11,6 +11,7 @@ import com.example.task_manager.entity.Task;
 import com.example.task_manager.entity.User;
 import com.example.task_manager.entity.entity_enum.ROLE;
 import com.example.task_manager.exception.TaskAlreadyExistsException;
+import com.example.task_manager.exception.TaskNotFoundException;
 import com.example.task_manager.exception.UserAlreadyExistsException;
 import com.example.task_manager.exception.UserNotFoundException;
 import com.example.task_manager.repository.TaskRepository;
@@ -158,6 +159,33 @@ public class UserService {
 
         return this.myOwnTasks;
 
+
+    }
+
+    public String deleteTask(UUID taskId, UUID userId){
+
+        Optional<User> returnedUser = this.userRepository.findById(userId);
+        Optional<Task> returnedTask = this.taskRepository.findById(taskId);
+
+        if(returnedUser.isEmpty()){
+            throw new UserNotFoundException("User not found");
+        }
+
+        if(returnedTask.isEmpty()){
+            throw new TaskNotFoundException("Task not found");
+        }
+
+
+        this.taskRepository.deleteById(taskId);
+
+
+        returnedUser.get().getTasks().forEach(idTask ->{
+
+            returnedUser.get().getTasks().removeIf(removedTask -> idTask == taskId); 
+
+        });
+
+        return "Task was removed with successfully";
 
     }
 
