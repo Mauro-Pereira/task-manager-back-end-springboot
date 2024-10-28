@@ -5,5 +5,4 @@ public enum STATUS {
     PENDING,
     IN_PROGRESS,
     COMPLETED
-
 }
