@@ -1,5 +1,6 @@
 package com.example.task_manager.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.task_manager.entity.Task;
 import com.example.task_manager.entity.User;
+import com.example.task_manager.entity.entity_enum.TASK_STATUS;
 import com.example.task_manager.exception.TaskAlreadyExistsException;
 import com.example.task_manager.exception.TaskNotFoundException;
 import com.example.task_manager.exception.UserNotFoundException;
@@ -48,7 +50,21 @@ public class TaskService {
     }
 
     public List<Task> listAllTask(){
-        return this.taskRepository.findAll();
+
+        List<Task> taskList = this.taskRepository.findAll();
+
+        taskList.forEach(task ->{
+            if(task.getExpirationDate().isBefore(LocalDateTime.now())){
+                task.setStatus(TASK_STATUS.EXPIRED);
+            }else{
+                task.setStatus(TASK_STATUS.IN_TIME);
+            }
+
+            this.taskRepository.save(task);
+        });
+
+
+        return taskList;
     }
 
     public List<Task> getMyTasks(UUID userId){
@@ -65,6 +81,13 @@ public class TaskService {
             Optional<Task> returnedTask = this.taskRepository.findById(task);
 
             if(returnedTask.isPresent()){
+                if(returnedTask.get().getExpirationDate().isBefore(LocalDateTime.now())){
+                    returnedTask.get().setStatus(TASK_STATUS.EXPIRED);
+                }else{
+                    returnedTask.get().setStatus(TASK_STATUS.IN_TIME);
+                }
+
+                this.taskRepository.save(returnedTask.get());
                 this.myOwnTasks.add(returnedTask.get());
             }
         });
