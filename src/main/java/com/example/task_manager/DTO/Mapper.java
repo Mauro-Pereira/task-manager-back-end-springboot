@@ -1,5 +1,6 @@
 package com.example.task_manager.DTO;
 
+import com.example.task_manager.entity.Task;
 import com.example.task_manager.entity.User;
 
 public class Mapper {
@@ -23,6 +24,14 @@ public class Mapper {
         newUserResponse.setAdmin(user.isAdmin());
         return newUserResponse;
 
+    }
+
+    public static Task taskResquestToTask(TaskRequest taskRequest){
+        Task newTask = new Task();
+        newTask.setTitle(taskRequest.getTitle());
+        newTask.setDescription(taskRequest.getDescription());
+        newTask.setExpirationDate(taskRequest.getExpirationDate());
+        return newTask;
     }
 
 }

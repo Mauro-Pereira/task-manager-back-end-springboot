@@ -25,6 +25,9 @@ public class Task {
         this.expirationDate = expirationDate;
         this.status = status;
     }
+
+    public Task(){}
+
     public UUID getTaskId() {
         return taskId;
     }
