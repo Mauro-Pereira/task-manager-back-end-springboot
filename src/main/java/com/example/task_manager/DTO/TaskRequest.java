@@ -1,5 +1,7 @@
 package com.example.task_manager.DTO;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,11 +11,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequest {
+public class TaskRequest {
 
-    private String name;
-    private String email;
-    private String password;
-    private boolean isAdmin;
+    private String title;
+    private String description;
+    private LocalDateTime expirationDate;
 
 }
