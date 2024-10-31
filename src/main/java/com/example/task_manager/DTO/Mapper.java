@@ -15,4 +15,14 @@ public class Mapper {
         
     }
 
+    public static UserResponse userToUserResponse(User user){
+        UserResponse newUserResponse = new UserResponse();
+        newUserResponse.setUserID(user.getUserID());
+        newUserResponse.setName(user.getName());
+        newUserResponse.setEmail(user.getEmail());
+        newUserResponse.setAdmin(user.isAdmin());
+        return newUserResponse;
+
+    }
+
 }
