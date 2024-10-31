@@ -34,4 +34,13 @@ public class Mapper {
         return newTask;
     }
 
+    public static TaskResponse taskToTaskResponse(Task task){
+        TaskResponse newTaskResponse = new TaskResponse();
+        newTaskResponse.setTaskId(task.getTaskId());
+        newTaskResponse.setTitle(task.getTitle());
+        newTaskResponse.setDescription(task.getDescription());
+        newTaskResponse.setStatus(task.getStatus());
+        return newTaskResponse;
+    }
+
 }
