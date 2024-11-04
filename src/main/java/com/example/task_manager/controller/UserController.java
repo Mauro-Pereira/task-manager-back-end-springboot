@@ -47,7 +47,7 @@ public class UserController {
         return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }
 
-     @GetMapping("/listAllUsers")
+    @GetMapping("/listAllUsers")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
 
         List<UserResponse> userResponseList = this.userService

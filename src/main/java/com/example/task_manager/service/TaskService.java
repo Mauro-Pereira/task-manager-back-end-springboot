@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.example.task_manager.DTO.TaskRequest;
 import com.example.task_manager.entity.Task;
 import com.example.task_manager.entity.User;
 import com.example.task_manager.entity.entity_enum.TASK_STATUS;
@@ -97,7 +98,7 @@ public class TaskService {
 
     }
 
-    public String deleteTask(UUID taskId, UUID userId){
+    public void deleteTask(UUID taskId, UUID userId){
 
         Optional<User> returnedUser = this.userRepository.findById(userId);
         Optional<Task> returnedTask = this.taskRepository.findById(taskId);
@@ -120,8 +121,39 @@ public class TaskService {
 
         });
 
-        return "Task was removed with successfully";
+    }
 
+    public Task updateTask(UUID userId, UUID taskId, Task taskResquest) {
+        Optional<User> returnedUser = this.userRepository.findById(userId);
+        Optional<Task> returnedTask = this.taskRepository.findById(taskId);
+
+        if(returnedUser.isEmpty()){
+            throw new UserNotFoundException("User not found");
+        }
+
+        if(returnedTask.isEmpty()){
+            throw new TaskNotFoundException("Task not found");
+        }
+
+
+        if(taskResquest != null && taskResquest.getTitle() != null){
+
+            returnedTask.get().setTitle(taskResquest.getTitle());
+        }
+
+        
+        if(taskResquest != null && taskResquest.getDescription() != null){
+
+            returnedTask.get().setDescription(taskResquest.getDescription());
+        }
+
+        
+        if(taskResquest != null && taskResquest.getExpirationDate() != null){
+
+            returnedTask.get().setExpirationDate(taskResquest.getExpirationDate());
+        }
+
+        return returnedTask.get();
     }
 
 }
