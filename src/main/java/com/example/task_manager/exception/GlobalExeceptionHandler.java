@@ -29,4 +29,11 @@ public class GlobalExeceptionHandler {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler({TaskAlreadyExistsException.class})
+    public ResponseEntity<Object> handleTaskAlreadyExistsException(TaskAlreadyExistsException exception) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
+
 }
