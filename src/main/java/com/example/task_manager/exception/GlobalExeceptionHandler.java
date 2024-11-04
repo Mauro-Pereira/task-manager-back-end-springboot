@@ -1,5 +1,5 @@
 package com.example.task_manager.exception;
 
-public class GlobalExecptionHandler {
+public class GlobalExeceptionHandler {
 
 }
