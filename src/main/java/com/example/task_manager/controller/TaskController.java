@@ -79,7 +79,7 @@ public class TaskController {
         return new ResponseEntity<>(updateTask, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/task/update", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/task/updateStatus", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<List<Task>> streamTaskUpdate(){
         return Flux.interval(Duration.ofSeconds(5))
                 .map(interval -> taskService.listAllTask());
