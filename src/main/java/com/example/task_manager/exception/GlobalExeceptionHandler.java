@@ -22,4 +22,11 @@ public class GlobalExeceptionHandler {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler({TaskNotFoundException.class})
+    public ResponseEntity<Object> handleTaskNotFoundException(TaskNotFoundException exception) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(exception.getMessage());
+    }
+
 }
