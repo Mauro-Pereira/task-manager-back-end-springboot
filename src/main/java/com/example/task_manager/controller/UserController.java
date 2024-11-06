@@ -22,6 +22,9 @@ import com.example.task_manager.entity.User;
 import com.example.task_manager.exception.UserAlreadyExistsException;
 import com.example.task_manager.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 
@@ -36,6 +39,15 @@ public class UserController {
         this.userService = userService;
     }
 
+
+    @Operation(
+        summary = "Register User",
+        description = "A user must be registered in the system with their given name, email, password, and admin status")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Registered with successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized - Incorrect username or password"),
+        @ApiResponse(responseCode = "404", description = "User Already Exists")
+    })
     @PostMapping("/registerUser")
     public ResponseEntity<User> registerUser(@RequestBody UserRequest userRequest) {
         try{
@@ -45,12 +57,26 @@ public class UserController {
         }
     }
 
+    @Operation(
+        summary = "Update User",
+        description = "A user must be updated in the system with their given name, email, password, and admin status")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Updated with successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized - Incorrect username or password"),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
     @PutMapping("/updateUser/{id}")
     public ResponseEntity<User> updateUser(@PathVariable UUID id, @RequestBody UserRequest userResquest) {
         User updateUser = this.userService.updateUser(id, Mapper.userRequestToUser(userResquest));
         return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }
 
+    @Operation(
+        summary = "List User",
+        description = "A user must be listed")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "If exists users in the system, it must be retorned"),
+    })
     @GetMapping("/listAllUsers")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
 
@@ -63,6 +89,15 @@ public class UserController {
 
         return new ResponseEntity<>(userResponseList, HttpStatus.OK);
     }
+
+    @Operation(
+        summary = "Delete User",
+        description = "Given an user id, this user must be deleted")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Deleted with successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized - Incorrect username or password"),
+        @ApiResponse(responseCode = "404", description = "User Not Found")
+    })
 
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
