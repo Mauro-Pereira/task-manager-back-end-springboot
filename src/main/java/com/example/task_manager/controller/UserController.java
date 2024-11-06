@@ -22,6 +22,10 @@ import com.example.task_manager.entity.User;
 import com.example.task_manager.exception.UserAlreadyExistsException;
 import com.example.task_manager.service.UserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+
+@Tag(name = "Task Manager", description = "JWT Spring Boot API")
 @RestController
 @RequestMapping("/user")
 public class UserController {
