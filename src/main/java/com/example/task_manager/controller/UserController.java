@@ -45,7 +45,6 @@ public class UserController {
         description = "A user must be registered in the system with their given name, email, password, and admin status")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Registered with successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized - Incorrect username or password"),
         @ApiResponse(responseCode = "404", description = "User Already Exists")
     })
     @PostMapping("/registerUser")
@@ -62,7 +61,6 @@ public class UserController {
         description = "A user must be updated in the system with their given name, email, password, and admin status")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Updated with successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized - Incorrect username or password"),
         @ApiResponse(responseCode = "404", description = "User not found")
     })
     @PutMapping("/updateUser/{id}")
@@ -75,7 +73,7 @@ public class UserController {
         summary = "List User",
         description = "A user must be listed")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "If exists users in the system, it must be retorned"),
+        @ApiResponse(responseCode = "200", description = "Listed with succesfully"),
     })
     @GetMapping("/listAllUsers")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
@@ -95,7 +93,6 @@ public class UserController {
         description = "Given an user id, this user must be deleted")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Deleted with successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized - Incorrect username or password"),
         @ApiResponse(responseCode = "404", description = "User Not Found")
     })
 
