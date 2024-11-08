@@ -2,10 +2,11 @@ package com.example.task_manager.controller;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.UUID;
+
 import java.util.stream.Collectors;
 
 import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,6 +38,7 @@ public class TaskController {
 
     private TaskService taskService;
 
+    @Autowired
     public TaskController(TaskService taskService){
         this.taskService = taskService;
     }
@@ -50,7 +52,7 @@ public class TaskController {
         @ApiResponse(responseCode = "404", description = "Task Already Exists")
     })
     @PostMapping("/registerTask/{userId}")
-    public ResponseEntity<?> registerTask(@RequestBody TaskRequest taskRequest, @PathVariable UUID userId) {
+    public ResponseEntity<?> registerTask(@RequestBody TaskRequest taskRequest, @PathVariable String userId) {
         try{
             return new ResponseEntity<>(taskService.addTask(Mapper.taskResquestToTask(taskRequest), userId), HttpStatus.OK);
         }catch(TaskAlreadyExistsException e) {
@@ -89,7 +91,7 @@ public class TaskController {
             @ApiResponse(responseCode = "404", description = "Task Not Found")
         })
         @GetMapping("/getMyTasks/{userId}")
-        public ResponseEntity<List<TaskResponse>> getMyTask(@PathVariable UUID userId) {
+        public ResponseEntity<List<TaskResponse>> getMyTask(@PathVariable String userId) {
             List<TaskResponse> taskResponseList = this.taskService
                                         .getMyTasks(userId)
                                         .stream()
@@ -109,7 +111,7 @@ public class TaskController {
             @ApiResponse(responseCode = "404", description = "Task Not Found")
         })
         @DeleteMapping("/deleteUser/{userId}/{taskId}")
-        public ResponseEntity<?> deleteTask(@PathVariable UUID userId, @PathVariable UUID taskId) {
+        public ResponseEntity<?> deleteTask(@PathVariable String userId, @PathVariable String taskId) {
             taskService.deleteTask(userId, taskId);
 
             return new ResponseEntity<>("Deleted with successfully", HttpStatus.OK);
@@ -125,7 +127,7 @@ public class TaskController {
             @ApiResponse(responseCode = "404", description = "Task Not Found")
         })
         @PutMapping("/updateTask/{userid}/{taskId}")
-        public ResponseEntity<Task> updateTask(@PathVariable UUID userId, @PathVariable UUID taskId, @RequestBody TaskRequest taskResquest) {
+        public ResponseEntity<Task> updateTask(@PathVariable String userId, @PathVariable String taskId, @RequestBody TaskRequest taskResquest) {
         Task updateTask = this.taskService.updateTask(userId, taskId, Mapper.taskResquestToTask(taskResquest));
         return new ResponseEntity<>(updateTask, HttpStatus.OK);
     }

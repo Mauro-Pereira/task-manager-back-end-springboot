@@ -1,7 +1,6 @@
 package com.example.task_manager.entity;
 
 import java.util.Set;
-import java.util.UUID;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,16 +12,16 @@ import jakarta.persistence.Id;
 public class User {
 
     @Id
-    private UUID userID;
+    private String id;
     private String name;
     private String email;
     private String password;
     private boolean isAdmin = false;
     private ROLE role;
-    private Set<UUID> tasks;
+    private Set<String> tasks;
 
-    public User(UUID userID, String name, String email, String password, boolean isAdmin, ROLE role, Set<UUID> tasks) {
-        this.userID = userID;
+    public User(String id, String name, String email, String password, boolean isAdmin, ROLE role, Set<String> tasks) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -33,12 +32,12 @@ public class User {
 
     public User(){}
 
-    public UUID getUserID() {
-        return userID;
+    public String getId() {
+        return id;
     }
 
-    public void setUserID(UUID userID) {
-        this.userID = userID;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -81,11 +80,11 @@ public class User {
         this.role = role;
     }
 
-    public Set<UUID> getTasks() {
+    public Set<String> getTasks() {
         return tasks;
     }
 
-    public void setTasks(Set<UUID> tasks) {
+    public void setTasks(Set<String> tasks) {
         this.tasks = tasks;
     }
     

@@ -1,8 +1,6 @@
 package com.example.task_manager.DTO;
 
 import java.util.Set;
-import java.util.UUID;
-
 
 import com.example.task_manager.entity.entity_enum.ROLE;
 
@@ -17,11 +15,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserResponse {
 
-    private UUID userID;
+    private String userID;
     private String name;
     private String email;
-    private boolean isAdmin = false;
+    private boolean isAdmin;
     private ROLE role;
-    private Set<UUID> tasks;
+    private Set<String> tasks;
 
 }

@@ -1,7 +1,6 @@
 package com.example.task_manager.entity;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.example.task_manager.entity.entity_enum.TASK_STATUS;
@@ -12,14 +11,14 @@ import jakarta.persistence.Id;
 public class Task {
 
     @Id
-    private UUID taskId;
+    private String id;
     private String title;
     private String description;
     private LocalDateTime expirationDate;
     private TASK_STATUS status;
     
-    public Task(UUID taskId, String title, String description, LocalDateTime expirationDate, TASK_STATUS status) {
-        this.taskId = taskId;
+    public Task(String id, String title, String description, LocalDateTime expirationDate, TASK_STATUS status) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.expirationDate = expirationDate;
@@ -28,11 +27,11 @@ public class Task {
 
     public Task(){}
 
-    public UUID getTaskId() {
-        return taskId;
+    public String getTaskId() {
+        return id;
     }
-    public void setTaskId(UUID taskId) {
-        this.taskId = taskId;
+    public void setTaskId(String taskId) {
+        this.id = taskId;
     }
     public String getTitle() {
         return title;

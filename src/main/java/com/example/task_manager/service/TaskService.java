@@ -3,11 +3,9 @@ package com.example.task_manager.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.example.task_manager.DTO.TaskRequest;
 import com.example.task_manager.entity.Task;
 import com.example.task_manager.entity.User;
 import com.example.task_manager.entity.entity_enum.TASK_STATUS;
@@ -30,11 +28,11 @@ public class TaskService {
         this.myOwnTasks = myOwnTasks;
     } 
 
-    public Task addTask(Task task, UUID idUser){
+    public Task addTask(Task task, String idUser){
 
         
-        Optional<User> returnedUser = this.userRepository.findById(idUser);
-        Optional<Task> returnedTask = this.taskRepository.findById(task.getTaskId());
+        Optional<User> returnedUser = this.userRepository.findUserById(idUser);
+        Optional<Task> returnedTask = this.taskRepository.findTaskById(task.getTaskId());
 
         if(returnedUser.isEmpty()){
             throw new UserNotFoundException("User not found");
@@ -68,10 +66,10 @@ public class TaskService {
         return taskList;
     }
 
-    public List<Task> getMyTasks(UUID userId){
+    public List<Task> getMyTasks(String userId){
 
         
-        Optional<User> returnedUser = this.userRepository.findById(userId);
+        Optional<User> returnedUser = this.userRepository.findUserById(userId);
 
         if(returnedUser.isEmpty()){
             throw new UserNotFoundException("User not found");
@@ -79,7 +77,7 @@ public class TaskService {
 
         returnedUser.get().getTasks().forEach(task ->{
 
-            Optional<Task> returnedTask = this.taskRepository.findById(task);
+            Optional<Task> returnedTask = this.taskRepository.findTaskById(task);
 
             if(returnedTask.isPresent()){
                 if(returnedTask.get().getExpirationDate().isBefore(LocalDateTime.now())){
@@ -98,10 +96,10 @@ public class TaskService {
 
     }
 
-    public void deleteTask(UUID taskId, UUID userId){
+    public void deleteTask(String taskId, String userId){
 
-        Optional<User> returnedUser = this.userRepository.findById(userId);
-        Optional<Task> returnedTask = this.taskRepository.findById(taskId);
+        Optional<User> returnedUser = this.userRepository.findUserById(userId);
+        Optional<Task> returnedTask = this.taskRepository.findTaskById(taskId);
 
         if(returnedUser.isEmpty()){
             throw new UserNotFoundException("User not found");
@@ -112,7 +110,7 @@ public class TaskService {
         }
 
 
-        this.taskRepository.deleteById(taskId);
+        this.taskRepository.deleteTaskById(taskId);
 
 
         returnedUser.get().getTasks().forEach(idTask ->{
@@ -123,9 +121,9 @@ public class TaskService {
 
     }
 
-    public Task updateTask(UUID userId, UUID taskId, Task taskResquest) {
-        Optional<User> returnedUser = this.userRepository.findById(userId);
-        Optional<Task> returnedTask = this.taskRepository.findById(taskId);
+    public Task updateTask(String userId, String taskId, Task taskResquest) {
+        Optional<User> returnedUser = this.userRepository.findUserById(userId);
+        Optional<Task> returnedTask = this.taskRepository.findTaskById(taskId);
 
         if(returnedUser.isEmpty()){
             throw new UserNotFoundException("User not found");

@@ -1,9 +1,9 @@
 package com.example.task_manager.controller;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,6 +35,7 @@ public class UserController {
 
     private UserService userService;
 
+    @Autowired
     public UserController(UserService userService){
         this.userService = userService;
     }
@@ -64,7 +65,7 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "User not found")
     })
     @PutMapping("/updateUser/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable UUID id, @RequestBody UserRequest userResquest) {
+    public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody UserRequest userResquest) {
         User updateUser = this.userService.updateUser(id, Mapper.userRequestToUser(userResquest));
         return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }
@@ -97,7 +98,7 @@ public class UserController {
     })
 
     @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
+    public ResponseEntity<?> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
 
         return new ResponseEntity<>("Deleted with successfully", HttpStatus.OK);

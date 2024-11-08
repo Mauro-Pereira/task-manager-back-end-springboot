@@ -1,13 +1,15 @@
 package com.example.task_manager.repository;
 
-import java.util.UUID;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
 import com.example.task_manager.entity.User;
 
-@Repository
-public interface UserRepository extends MongoRepository<User, UUID>{
+public interface UserRepository extends MongoRepository<User, String>{
+
+    Optional<User> findUserByEmail(String email);
+    Optional<User> findUserById(String ID);
+    void deleteUserById(String ID);
 
 }

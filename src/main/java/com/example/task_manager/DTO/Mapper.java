@@ -18,7 +18,7 @@ public class Mapper {
 
     public static UserResponse userToUserResponse(User user){
         UserResponse newUserResponse = new UserResponse();
-        newUserResponse.setUserID(user.getUserID());
+        newUserResponse.setUserID(user.getId());
         newUserResponse.setName(user.getName());
         newUserResponse.setEmail(user.getEmail());
         newUserResponse.setAdmin(user.isAdmin());
@@ -36,7 +36,7 @@ public class Mapper {
 
     public static TaskResponse taskToTaskResponse(Task task){
         TaskResponse newTaskResponse = new TaskResponse();
-        newTaskResponse.setTaskId(task.getTaskId());
+        newTaskResponse.setId(task.getTaskId());
         newTaskResponse.setTitle(task.getTitle());
         newTaskResponse.setDescription(task.getDescription());
         newTaskResponse.setStatus(task.getStatus());

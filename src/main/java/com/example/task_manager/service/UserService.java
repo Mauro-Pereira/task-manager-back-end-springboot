@@ -2,7 +2,6 @@ package com.example.task_manager.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class UserService {
 
     public User saveUser(User user){
 
-        Optional<User> returnedUser = this.userRepository.findById(user.getUserID());
+        Optional<User> returnedUser = this.userRepository.findUserByEmail(user.getEmail());
 
         if(returnedUser.isPresent()){
             throw new UserAlreadyExistsException("User Already Exists");
@@ -43,9 +42,9 @@ public class UserService {
         return this.userRepository.findAll();
     }
 
-    public User getUserById(UUID idUser){
+    public User getUserById(String idUser){
 
-        Optional<User> returnedUser = this.userRepository.findById(idUser);
+        Optional<User> returnedUser = this.userRepository.findUserById(idUser);
 
         if(returnedUser.isEmpty()){
             throw new UserNotFoundException("User not found");
@@ -54,21 +53,21 @@ public class UserService {
         return returnedUser.get();
     }
 
-    public void deleteUser(UUID idUser){
+    public void deleteUser(String idUser){
 
-        Optional<User> returnedUser = this.userRepository.findById(idUser);
+        Optional<User> returnedUser = this.userRepository.findUserById(idUser);
 
         if(returnedUser.isEmpty()){
             throw new UserNotFoundException("User not found");
         }
 
-        this.userRepository.deleteById(returnedUser.get().getUserID());
+        this.userRepository.deleteUserById(returnedUser.get().getId());
 
     }
 
-    public User updateUser(UUID userId, User user){
+    public User updateUser(String userId, User user){
 
-        Optional<User> returnedUser = this.userRepository.findById(userId);
+        Optional<User> returnedUser = this.userRepository.findUserById(userId);
 
         if(returnedUser.isEmpty()){
             throw new UserNotFoundException("User not found");
