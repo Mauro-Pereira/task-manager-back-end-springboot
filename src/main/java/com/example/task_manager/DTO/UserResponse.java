@@ -1,8 +1,7 @@
 package com.example.task_manager.DTO;
 
+import java.util.HashSet;
 import java.util.Set;
-
-import com.example.task_manager.entity.entity_enum.ROLE;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +18,6 @@ public class UserResponse {
     private String name;
     private String email;
     private boolean isAdmin;
-    private ROLE role;
-    private Set<String> tasks;
+    private Set<String> tasks = new HashSet<>();
 
 }
