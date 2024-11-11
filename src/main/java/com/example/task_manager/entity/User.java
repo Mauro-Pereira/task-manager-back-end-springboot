@@ -1,5 +1,6 @@
 package com.example.task_manager.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,7 +19,7 @@ public class User {
     private String password;
     private boolean isAdmin = false;
     private ROLE role;
-    private Set<String> tasks;
+    private Set<String> tasks = new HashSet<>();
 
     public User(String id, String name, String email, String password, boolean isAdmin, ROLE role, Set<String> tasks) {
         this.id = id;
@@ -81,6 +82,7 @@ public class User {
     }
 
     public Set<String> getTasks() {
+
         return tasks;
     }
 
