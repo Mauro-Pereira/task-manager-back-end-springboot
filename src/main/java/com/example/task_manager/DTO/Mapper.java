@@ -22,6 +22,7 @@ public class Mapper {
         newUserResponse.setName(user.getName());
         newUserResponse.setEmail(user.getEmail());
         newUserResponse.setAdmin(user.isAdmin());
+        newUserResponse.setTasks(user.getTasks());
         return newUserResponse;
 
     }
@@ -39,6 +40,7 @@ public class Mapper {
         newTaskResponse.setId(task.getTaskId());
         newTaskResponse.setTitle(task.getTitle());
         newTaskResponse.setDescription(task.getDescription());
+        newTaskResponse.setExpirationDate(task.getExpirationDate());
         newTaskResponse.setStatus(task.getStatus());
         return newTaskResponse;
     }
