@@ -1,6 +1,7 @@
 package com.example.task_manager.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ public class TaskService {
 
         
         Optional<User> returnedUser = this.userRepository.findUserById(idUser);
-        Optional<Task> returnedTask = this.taskRepository.findTaskById(task.getTaskId());
+        Optional<Task> returnedTask = this.taskRepository.findTaskByTitle(task.getTitle());
 
         if(returnedUser.isEmpty()){
             throw new UserNotFoundException("User not found");
@@ -45,6 +46,8 @@ public class TaskService {
         Task savedTask = this.taskRepository.save(task);
         returnedUser.get().getTasks().add(savedTask.getTaskId());
 
+        this.userRepository.save(returnedUser.get());
+
         return savedTask;
     }
 
@@ -53,7 +56,7 @@ public class TaskService {
         List<Task> taskList = this.taskRepository.findAll();
 
         taskList.forEach(task ->{
-            if(task.getExpirationDate().isBefore(LocalDateTime.now())){
+            if(task.getExpirationDate().isBefore(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")))){
                 task.setStatus(TASK_STATUS.EXPIRED);
             }else{
                 task.setStatus(TASK_STATUS.IN_TIME);
@@ -80,7 +83,7 @@ public class TaskService {
             Optional<Task> returnedTask = this.taskRepository.findTaskById(task);
 
             if(returnedTask.isPresent()){
-                if(returnedTask.get().getExpirationDate().isBefore(LocalDateTime.now())){
+                if(returnedTask.get().getExpirationDate().isBefore(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")))){
                     returnedTask.get().setStatus(TASK_STATUS.EXPIRED);
                 }else{
                     returnedTask.get().setStatus(TASK_STATUS.IN_TIME);
@@ -96,7 +99,7 @@ public class TaskService {
 
     }
 
-    public void deleteTask(String taskId, String userId){
+    public void deleteTask(String userId, String taskId){
 
         Optional<User> returnedUser = this.userRepository.findUserById(userId);
         Optional<Task> returnedTask = this.taskRepository.findTaskById(taskId);
@@ -112,12 +115,9 @@ public class TaskService {
 
         this.taskRepository.deleteTaskById(taskId);
 
+        returnedUser.get().getTasks().remove(taskId); 
 
-        returnedUser.get().getTasks().forEach(idTask ->{
-
-            returnedUser.get().getTasks().removeIf(removedTask -> idTask == taskId); 
-
-        });
+        this.userRepository.save(returnedUser.get());
 
     }
 
