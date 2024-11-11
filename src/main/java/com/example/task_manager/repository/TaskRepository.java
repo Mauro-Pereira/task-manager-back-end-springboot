@@ -9,6 +9,7 @@ import com.example.task_manager.entity.Task;
 public interface TaskRepository extends MongoRepository<Task, String>{
 
     Optional<Task> findTaskById(String ID);
+    Optional<Task> findTaskByTitle(String title);
     void deleteTaskById(String ID);
 
 }
