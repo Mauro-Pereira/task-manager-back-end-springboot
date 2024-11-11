@@ -9,15 +9,18 @@ import com.example.task_manager.entity.User;
 import com.example.task_manager.entity.entity_enum.ROLE;
 import com.example.task_manager.exception.UserAlreadyExistsException;
 import com.example.task_manager.exception.UserNotFoundException;
+import com.example.task_manager.repository.TaskRepository;
 import com.example.task_manager.repository.UserRepository;
 
 @Service
 public class UserService {
 
     private UserRepository userRepository;
+    private TaskRepository taskRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, TaskRepository taskRepository) {
         this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
     }
 
     public User saveUser(User user){
@@ -60,6 +63,10 @@ public class UserService {
         if(returnedUser.isEmpty()){
             throw new UserNotFoundException("User not found");
         }
+
+        returnedUser.get().getTasks().forEach(taskId ->{
+            this.taskRepository.deleteTaskById(taskId);
+        });
 
         this.userRepository.deleteUserById(returnedUser.get().getId());
 
