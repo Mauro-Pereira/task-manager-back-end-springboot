@@ -25,8 +25,11 @@ public class UserService {
 
     public User saveUser(User user){
 
-        this.userRepository.findUserByEmail(user.getEmail())
-        .orElseThrow(() -> new UserAlreadyExistsException("User Already Exists"));
+        Optional<User> returnedUser = this.userRepository.findUserByEmail(user.getEmail());
+
+        if(returnedUser.isPresent()){
+            throw new UserAlreadyExistsException("User Already Exists");
+        }
 
         user.setRole(user.isAdmin() ? ROLE.ADMIN: ROLE.USER);
 
