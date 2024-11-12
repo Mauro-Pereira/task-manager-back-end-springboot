@@ -72,10 +72,10 @@ public class UserController {
 
 
     @Operation(
-        summary = "Update User",
-        description = "A user must be updated in the system with their given name, email, password, and admin status")
+        summary = "Return User",
+        description = "A user must be returned from the system when a userId is passed")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Updated with successfully"),
+        @ApiResponse(responseCode = "200", description = "Returned with successfully"),
         @ApiResponse(responseCode = "404", description = "User not found")
     })
     @GetMapping("/getUser/{idUser}")
@@ -112,10 +112,10 @@ public class UserController {
     })
 
     @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable String id) {
+    public ResponseEntity<String> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
 
-        return new ResponseEntity<>("Deleted with successfully", HttpStatus.OK);
+        return ResponseEntity.ok("Deleted with successfully");
     }
 
 }
