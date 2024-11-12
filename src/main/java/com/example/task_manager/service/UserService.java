@@ -64,9 +64,15 @@ public class UserService {
             throw new UserNotFoundException("User not found");
         }
 
-        returnedUser.get().getTasks().forEach(taskId ->{
-            this.taskRepository.deleteTaskById(taskId);
-        });
+        if(returnedUser.get().getTasks().size() > 0){
+
+            returnedUser.get().getTasks().forEach(taskId ->{
+                this.taskRepository.deleteTaskById(taskId);
+            });
+
+        }
+
+
 
         this.userRepository.deleteUserById(returnedUser.get().getId());
 
