@@ -31,22 +31,16 @@ public class TaskService {
 
     public Task addTask(Task task, String idUser){
 
-        
-        Optional<User> returnedUser = this.userRepository.findUserById(idUser);
-        Optional<Task> returnedTask = this.taskRepository.findTaskByTitle(task.getTitle());
+        User returnedUser = this.userRepository.findUserById(idUser)
+        .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        if(returnedUser.isEmpty()){
-            throw new UserNotFoundException("User not found");
-        }
-
-        if(returnedTask.isPresent()){
-            throw new TaskAlreadyExistsException("Task Already exists");
-        }
+        this.taskRepository.findTaskByTitle(task.getTitle())
+        .orElseThrow(() -> new TaskAlreadyExistsException("Task Already exists"));
 
         Task savedTask = this.taskRepository.save(task);
-        returnedUser.get().getTasks().add(savedTask.getTaskId());
+        returnedUser.getTasks().add(savedTask.getTaskId());
 
-        this.userRepository.save(returnedUser.get());
+        this.userRepository.save(returnedUser);
 
         return savedTask;
     }
@@ -72,13 +66,10 @@ public class TaskService {
     public List<Task> getMyTasks(String userId){
 
         
-        Optional<User> returnedUser = this.userRepository.findUserById(userId);
+        User returnedUser = this.userRepository.findUserById(userId)
+        .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        if(returnedUser.isEmpty()){
-            throw new UserNotFoundException("User not found");
-        }
-
-        returnedUser.get().getTasks().forEach(task ->{
+        returnedUser.getTasks().forEach(task ->{
 
             Optional<Task> returnedTask = this.taskRepository.findTaskById(task);
 
@@ -101,28 +92,22 @@ public class TaskService {
 
     public void deleteTask(String userId, String taskId){
 
-        Optional<User> returnedUser = this.userRepository.findUserById(userId);
-        Optional<Task> returnedTask = this.taskRepository.findTaskById(taskId);
+        User returnedUser = this.userRepository.findUserById(userId)
+        .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        if(returnedUser.isEmpty()){
-            throw new UserNotFoundException("User not found");
-        }
-
-        if(returnedTask.isEmpty()){
-            throw new TaskNotFoundException("Task not found");
-        }
-
+        this.taskRepository.findTaskById(taskId)
+        .orElseThrow(() -> new TaskNotFoundException("Task not found"));
 
         this.taskRepository.deleteTaskById(taskId);
 
-        returnedUser.get().getTasks().remove(taskId); 
+        returnedUser.getTasks().remove(taskId); 
 
-        this.userRepository.save(returnedUser.get());
+        this.userRepository.save(returnedUser);
 
     }
 
     public Task updateTask(String userId, String taskId, Task taskRequest) {
-        
+
         this.userRepository.findUserById(userId) 
         .orElseThrow(() -> new UserNotFoundException("User not found")); 
 
