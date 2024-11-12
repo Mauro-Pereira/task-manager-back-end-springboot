@@ -121,37 +121,28 @@ public class TaskService {
 
     }
 
-    public Task updateTask(String userId, String taskId, Task taskResquest) {
-        Optional<User> returnedUser = this.userRepository.findUserById(userId);
-        Optional<Task> returnedTask = this.taskRepository.findTaskById(taskId);
-
-        if(returnedUser.isEmpty()){
-            throw new UserNotFoundException("User not found");
-        }
-
-        if(returnedTask.isEmpty()){
-            throw new TaskNotFoundException("Task not found");
-        }
-
-
-        if(taskResquest != null && taskResquest.getTitle() != null){
-
-            returnedTask.get().setTitle(taskResquest.getTitle());
-        }
-
+    public Task updateTask(String userId, String taskId, Task taskRequest) {
         
-        if(taskResquest != null && taskResquest.getDescription() != null){
+        this.userRepository.findUserById(userId) 
+        .orElseThrow(() -> new UserNotFoundException("User not found")); 
 
-            returnedTask.get().setDescription(taskResquest.getDescription());
-        }
+        Task task = this.taskRepository.findTaskById(taskId) 
+        .orElseThrow(() -> new TaskNotFoundException("Task not found")); 
 
-        
-        if(taskResquest != null && taskResquest.getExpirationDate() != null){
-
-            returnedTask.get().setExpirationDate(taskResquest.getExpirationDate());
-        }
-
-        return returnedTask.get();
+        if (taskRequest != null) { 
+            Optional.ofNullable(taskRequest.getTitle()) 
+            .filter(title -> !title.isEmpty()) 
+            .ifPresent(task::setTitle); 
+            
+            Optional.ofNullable(taskRequest.getDescription()) 
+            .filter(description -> !description.isEmpty()) 
+            .ifPresent(task::setDescription); 
+            
+            Optional.ofNullable(taskRequest.getExpirationDate()) 
+            .ifPresent(task::setExpirationDate); } 
+            
+            this.taskRepository.save(task); 
+            return task;
     }
 
 }

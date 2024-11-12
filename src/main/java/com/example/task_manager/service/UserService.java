@@ -25,17 +25,10 @@ public class UserService {
 
     public User saveUser(User user){
 
-        Optional<User> returnedUser = this.userRepository.findUserByEmail(user.getEmail());
+        this.userRepository.findUserByEmail(user.getEmail())
+        .orElseThrow(() -> new UserAlreadyExistsException("User Already Exists"));
 
-        if(returnedUser.isPresent()){
-            throw new UserAlreadyExistsException("User Already Exists");
-        }
-
-        if(user.isAdmin() == false){
-            user.setRole(ROLE.USER);
-        }else{
-            user.setRole(ROLE.ADMIN);
-        }
+        user.setRole(user.isAdmin() ? ROLE.ADMIN: ROLE.USER);
 
         return this.userRepository.save(user);
         
@@ -47,73 +40,49 @@ public class UserService {
 
     public User getUserById(String idUser){
 
-        Optional<User> returnedUser = this.userRepository.findUserById(idUser);
+        User returnedUser = this.userRepository.findUserById(idUser)
+        .orElseThrow(() -> new UserNotFoundException("User not found"));;
 
-        if(returnedUser.isEmpty()){
-            throw new UserNotFoundException("User not found");
-        }
-
-        return returnedUser.get();
+        return returnedUser;
     }
 
-    public void deleteUser(String idUser){
+    public void deleteUser(String userId){
 
-        Optional<User> returnedUser = this.userRepository.findUserById(idUser);
-
-        if(returnedUser.isEmpty()){
-            throw new UserNotFoundException("User not found");
-        }
-
-        if(returnedUser.get().getTasks().size() > 0){
-
-            returnedUser.get().getTasks().forEach(taskId ->{
-                this.taskRepository.deleteTaskById(taskId);
-            });
-
-        }
-
-        this.userRepository.deleteUserById(returnedUser.get().getId());
+        User user = this.userRepository.findUserById(userId) 
+        .orElseThrow(() -> new UserNotFoundException("User not found")); 
+        
+        user.getTasks().forEach(taskId -> this.taskRepository.deleteTaskById(taskId)); 
+        this.userRepository.deleteUserById(user.getId());
 
     }
 
-    public User updateUser(String userId, User user){
+    public User updateUser(String userId, User userRequest){
 
-        Optional<User> returnedUser = this.userRepository.findUserById(userId);
-
-        if(returnedUser.isEmpty()){
-            throw new UserNotFoundException("User not found");
-        }
-
-        if(user != null && user.getName() != null){
-
-            returnedUser.get().setName(user.getName());
-        }
-
-        if(user != null && user.getEmail() != null){
-
-            returnedUser.get().setEmail(user.getEmail());
-
-        }
-
-        if(user != null && user.getPassword() != null){
-
-            returnedUser.get().setPassword(user.getPassword());
-
-        }
-
-        if(user != null && user.isAdmin() != returnedUser.get().isAdmin()){
-
-            if(user.isAdmin() == false){
-                returnedUser.get().setRole(ROLE.USER);
-            }else{
-                returnedUser.get().setRole(ROLE.ADMIN);
-            }
-
-            returnedUser.get().setAdmin(user.isAdmin());
-
-        }
-
-        return this.userRepository.save(returnedUser.get());
+        User user = this.userRepository.findUserById(userId) 
+        .orElseThrow(() -> new UserNotFoundException("User not found")); 
+        
+        if (userRequest != null) { 
+            
+            Optional.ofNullable(userRequest.getName()) 
+            .filter(name -> !name.isEmpty()) 
+            .ifPresent(user::setName); 
+            
+            Optional.ofNullable(userRequest.getEmail()) 
+            .filter(email -> !email.isEmpty()) 
+            .ifPresent(user::setEmail); 
+            
+            Optional.ofNullable(userRequest.getPassword()) 
+            .filter(password -> !password.isEmpty()) 
+            .ifPresent(user::setPassword); 
+            
+            if (userRequest.isAdmin() != user.isAdmin()) { 
+                
+                user.setRole(userRequest.isAdmin() ? ROLE.ADMIN : ROLE.USER); 
+                user.setAdmin(userRequest.isAdmin()); 
+            } 
+        } 
+        
+        return this.userRepository.save(user);
     }
 
 
