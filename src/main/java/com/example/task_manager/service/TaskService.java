@@ -31,17 +31,18 @@ public class TaskService {
 
     public Task addTask(Task task, String idUser){
 
-        User returnedUser = this.userRepository.findUserById(idUser)
+        User returnedUser = this.userRepository.findUserById(idUser) 
         .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        this.taskRepository.findTaskByTitle(task.getTitle())
-        .orElseThrow(() -> new TaskAlreadyExistsException("Task Already exists"));
+        Optional<Task> returnedTask = this.taskRepository.findTaskByTitle(task.getTitle());
 
-        Task savedTask = this.taskRepository.save(task);
-        returnedUser.getTasks().add(savedTask.getTaskId());
-
+        if (returnedTask.isPresent()) { 
+            throw new TaskAlreadyExistsException("Task Already exists"); 
+        } 
+        
+        Task savedTask = this.taskRepository.save(task); 
+        returnedUser.getTasks().add(savedTask.getTaskId()); 
         this.userRepository.save(returnedUser);
-
         return savedTask;
     }
 

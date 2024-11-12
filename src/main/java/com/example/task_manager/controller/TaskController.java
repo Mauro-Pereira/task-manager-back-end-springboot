@@ -110,14 +110,12 @@ public class TaskController {
             @ApiResponse(responseCode = "200", description = "Deleted with successfully"),
             @ApiResponse(responseCode = "404", description = "Task Not Found")
         })
-        @DeleteMapping("/deleteUser/{userId}/{taskId}")
+        @DeleteMapping("/deleteUserTask/{userId}/{taskId}")
         public ResponseEntity<?> deleteTask(@PathVariable String userId, @PathVariable String taskId) {
             taskService.deleteTask(userId, taskId);
 
             return new ResponseEntity<>("Deleted with successfully", HttpStatus.OK);
         }
-
-
 
         @Operation(
             summary = "Update Task",
@@ -126,7 +124,7 @@ public class TaskController {
             @ApiResponse(responseCode = "200", description = "Deleted with successfully"),
             @ApiResponse(responseCode = "404", description = "Task Not Found")
         })
-        @PutMapping("/updateTask/{userid}/{taskId}")
+        @PutMapping("/updateTask/{userId}/{taskId}")
         public ResponseEntity<Task> updateTask(@PathVariable String userId, @PathVariable String taskId, @RequestBody TaskRequest taskResquest) {
         Task updateTask = this.taskService.updateTask(userId, taskId, Mapper.taskResquestToTask(taskResquest));
         return new ResponseEntity<>(updateTask, HttpStatus.OK);
