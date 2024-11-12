@@ -70,6 +70,20 @@ public class UserController {
         return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }
 
+
+    @Operation(
+        summary = "Update User",
+        description = "A user must be updated in the system with their given name, email, password, and admin status")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Updated with successfully"),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    @GetMapping("/getUser/{idUser}")
+    public ResponseEntity<UserResponse> getUser(@PathVariable String idUser) {
+        User returnedUser = this.userService.getUserById(idUser);
+        return new ResponseEntity<>(Mapper.userToUserResponse(returnedUser), HttpStatus.OK);
+    }
+
     @Operation(
         summary = "List User",
         description = "A user must be listed")
