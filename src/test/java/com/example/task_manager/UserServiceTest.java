@@ -99,4 +99,16 @@ public class UserServiceTest {
         verify(this.userRepository, times(1)).findAll();
     }
 
+    @Test
+    void shouldReturnUserWhenUserIdIsPassaed(){
+        String userId = "6733840f7389f61ad5276a55";
+        when(this.userRepository.findUserById(userId)).thenReturn(Optional.of(user));
+
+        Optional<User> returnedUser = this.userRepository.findById(userId);
+
+        assertEquals(returnedUser.get(), user);
+        assertEquals(userId, returnedUser.get().getId());
+        verify(this.userRepository, times(1)).findById(userId);
+    }
+
 }
