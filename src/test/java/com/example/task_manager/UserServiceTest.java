@@ -26,6 +26,7 @@ import com.example.task_manager.entity.User;
 import com.example.task_manager.entity.entity_enum.ROLE;
 import com.example.task_manager.entity.entity_enum.TASK_STATUS;
 import com.example.task_manager.exception.UserAlreadyExistsException;
+import com.example.task_manager.exception.UserNotFoundException;
 import com.example.task_manager.repository.TaskRepository;
 import com.example.task_manager.repository.UserRepository;
 import com.example.task_manager.service.UserService;
@@ -109,6 +110,22 @@ public class UserServiceTest {
         assertEquals(returnedUser.get(), user);
         assertEquals(userId, returnedUser.get().getId());
         verify(this.userRepository, times(1)).findById(userId);
+    }
+
+    @Test
+    void shouldReturnUserNotFoundExceptionWhenUserNotExists(){
+
+        String userId = "6733840f7389f61ad5276a55";
+        when(this.userRepository.findUserById(userId)).thenReturn(Optional.of(user));
+
+        UserNotFoundException returnedException = assertThrows(
+            UserNotFoundException.class,
+            () -> this.userService.getUserById(userId)
+        );
+
+        assertEquals("User not found", returnedException.getMessage());
+        verify(this.userRepository, times(1)).findById(userId);
+
     }
 
 }
