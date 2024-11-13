@@ -8,7 +8,9 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,19 +44,25 @@ public class UserServiceTest {
     @InjectMocks
     private TaskService taskService;
 
+    private LocalDateTime dataTime;
+    private Set<String> tasks = new HashSet<>();
+    private  Task task;
+    private  User user;
+
     @BeforeEach
     public void init(){
+
         MockitoAnnotations.openMocks(this);
+
+        this.dataTime = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+        this.task = new Task("6733ac5eb2822c4054d18e3f", "Task Test", "This is a test", dataTime, TASK_STATUS.EXPIRED);
+        tasks.add(task.getTaskId());
+        this.user = new User("6733840f7389f61ad5276a55", "User", "User@email.com", "password", false, ROLE.USER, tasks);
+
     }
 
     @Test
     void shouldReturnUserWhenItIsSave(){
-
-        LocalDateTime dataTime = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
-        Set<String> tasks = new HashSet<>();
-        Task task = new Task("6733ac5eb2822c4054d18e3f", "Task Test", "This is a test", dataTime, TASK_STATUS.EXPIRED);
-        tasks.add(task.getTaskId());
-        User user = new User("6733840f7389f61ad5276a55", "User", "User@email.com", "password", false, ROLE.USER, tasks);
 
         when(this.userRepository.save(user)).thenReturn(user);
 
@@ -69,12 +77,6 @@ public class UserServiceTest {
     @Test
     void shouldReturnUserAlreadyExistsExceptionWhenItIsSave(){
 
-        LocalDateTime dataTime = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
-        Set<String> tasks = new HashSet<>();
-        Task task = new Task("6733ac5eb2822c4054d18e3f", "Task Test", "This is a test", dataTime, TASK_STATUS.EXPIRED);
-        tasks.add(task.getTaskId());
-        User user = new User("6733840f7389f61ad5276a55", "User", "User@email.com", "password", false, ROLE.USER, tasks);
-
         when(this.userRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         UserAlreadyExistsException returnedException = assertThrows(
@@ -85,6 +87,19 @@ public class UserServiceTest {
         assertEquals("User Already Exists", returnedException.getMessage());
         verify(this.userRepository, times(1)).findUserByEmail(user.getEmail());
 
+    }
+
+    @Test
+    void shouldReturnAllUser(){
+        List<User> userList = new ArrayList<User>();
+        userList.add(user);
+        when(this.userRepository.findAll()).thenReturn(userList);
+
+        List<User> returnedUserList = this.userRepository.findAll();
+
+        assertEquals(returnedUserList, userList);
+        assertEquals(returnedUserList.size(), userList.size());
+        verify(this.userRepository, times(1)).findAll();
     }
 
 }
