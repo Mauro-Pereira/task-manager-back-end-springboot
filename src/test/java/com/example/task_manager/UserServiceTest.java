@@ -16,9 +16,10 @@ import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.task_manager.entity.Task;
 import com.example.task_manager.entity.User;
@@ -27,9 +28,9 @@ import com.example.task_manager.entity.entity_enum.TASK_STATUS;
 import com.example.task_manager.exception.UserAlreadyExistsException;
 import com.example.task_manager.repository.TaskRepository;
 import com.example.task_manager.repository.UserRepository;
-import com.example.task_manager.service.TaskService;
 import com.example.task_manager.service.UserService;
 
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
     @Mock
@@ -41,21 +42,17 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    @InjectMocks
-    private TaskService taskService;
-
     private LocalDateTime dataTime;
-    private Set<String> tasks = new HashSet<>();
+    private Set<String> tasks;
     private  Task task;
     private  User user;
 
     @BeforeEach
     public void init(){
 
-        MockitoAnnotations.openMocks(this);
-
         this.dataTime = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
         this.task = new Task("6733ac5eb2822c4054d18e3f", "Task Test", "This is a test", dataTime, TASK_STATUS.EXPIRED);
+        this.tasks = new HashSet<>();
         tasks.add(task.getTaskId());
         this.user = new User("6733840f7389f61ad5276a55", "User", "User@email.com", "password", false, ROLE.USER, tasks);
 
