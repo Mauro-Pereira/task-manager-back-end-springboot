@@ -2,6 +2,8 @@ package com.example.task_manager.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +42,8 @@ public class TaskService {
             throw new TaskAlreadyExistsException("Task Already exists"); 
         } 
         
-        Task savedTask = this.taskRepository.save(task); 
+        Task savedTask = this.taskRepository.save(task);
+        returnedUser.setTasks(new HashSet<>(returnedUser.getTasks())); 
         returnedUser.getTasks().add(savedTask.getTaskId()); 
         this.userRepository.save(returnedUser);
         return savedTask;
@@ -69,6 +72,8 @@ public class TaskService {
         
         User returnedUser = this.userRepository.findUserById(userId)
         .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        this.myOwnTasks = new ArrayList<Task>();
 
         returnedUser.getTasks().forEach(task ->{
 
