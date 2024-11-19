@@ -1,6 +1,8 @@
 package com.example.task_manager;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +28,7 @@ import java.time.ZoneId;
 import java.util.Optional;
 import java.util.Set;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.HashSet;
 
 @ExtendWith(MockitoExtension.class)
 public class TaskServiceTest {
@@ -105,14 +107,20 @@ public class TaskServiceTest {
 
     @Test
     public void getMyTasks_ShouldReturnUserTasks_WhenUserExists() {
-        String userId = user.getId();
-        Task task1 = new Task("task1", "Task 1", "Description", dataTime.minusDays(1), TASK_STATUS.EXPIRED);
-        Task task2 = new Task("task2", "Task 2", "Description", dataTime.plusDays(1), TASK_STATUS.IN_TIME);
+        LocalDateTime dataTime2 = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+        
+        Task task1 = new Task("task1", "Task 1", "Description", dataTime2.minusDays(1), TASK_STATUS.EXPIRED);
+        Task task2 = new Task("task2", "Task 2", "Description", dataTime2.plusDays(1), TASK_STATUS.IN_TIME);
 
-        user.getTasks().add(task1.getTaskId());
-        user.getTasks().add(task2.getTaskId());
+        Set<String> tasksSet = new HashSet<>();
+        tasksSet.add(task1.getTaskId());
+        tasksSet.add(task2.getTaskId());
 
-        when(userRepository.findUserById(userId)).thenReturn(Optional.of(user));
+        User user1 = new User("6733840f7389f61ad5276a55", "User", "User@email.com", "password", false, ROLE.USER, tasksSet);
+
+        String userId = user1.getId();
+
+        when(userRepository.findUserById(userId)).thenReturn(Optional.of(user1));
         when(taskRepository.findTaskById("task1")).thenReturn(Optional.of(task1));
         when(taskRepository.findTaskById("task2")).thenReturn(Optional.of(task2));
 
@@ -125,12 +133,19 @@ public class TaskServiceTest {
         verify(taskRepository, times(1)).save(task2);
     }
 
+
     @Test
     public void deleteTask_ShouldRemoveTaskAndReference_WhenTaskAndUserExist() {
         String userId = user.getId();
         String taskId = task.getTaskId();
 
-        user.getTasks().add(taskId);
+        Set<String> tasksId = new HashSet<>();
+
+        tasksId.add(taskId);
+
+        user.setTasks(tasksId);
+
+        //user.getTasks().add(taskId);
 
         when(userRepository.findUserById(userId)).thenReturn(Optional.of(user));
         when(taskRepository.findTaskById(taskId)).thenReturn(Optional.of(task));
@@ -207,8 +222,5 @@ public class TaskServiceTest {
         assertThrows(TaskNotFoundException.class, () -> taskService.updateTask(userId, taskId, updatedTask));
         verify(taskRepository, never()).save(any(Task.class));
     }
-
-
-
 
 }
