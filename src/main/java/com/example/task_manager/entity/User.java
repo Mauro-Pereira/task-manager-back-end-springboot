@@ -28,7 +28,7 @@ public class User {
         this.password = password;
         this.isAdmin = isAdmin;
         this.role = role;
-        this.tasks = tasks;
+        this.tasks = tasks != null ? new HashSet<>(tasks) : new HashSet<>();
     }
 
     public User(){}
@@ -82,7 +82,6 @@ public class User {
     }
 
     public Set<String> getTasks() {
-
         return tasks;
     }
 
