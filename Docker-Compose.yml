@@ -1,15 +1,32 @@
-version: 3.8
+version: "3.8"
 
 services:
   mongodb:
-    image: mongodb:4.4
+    image: mongo:latest
+    container_name: mongodb
     ports:
       - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: task
+      MONGO_INITDB_DATABASE: mongo-test
+    volumes:
+      - mongo-data:/data/db
 
   app:
     build: .
     ports:
       - "8080:8080"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://admin:task@mongodb:27017/mongo-test?authSource=admin
+      #- ME_CONFIG_MONGODB_ADMINUSERNAME=admin   
+      #- ME_CONFIG_MONGODB_ADMINPASSWORD=task
+      #- ME_CONFIG_MONGODB_SERVER=mongodb
+      #- ME_CONFIG_MONGODB_PORT=27017
+      #- ME_CONFIG_MONGODB_HOST=mongodb
     depends_on:
       - mongodb
-  
+
+volumes:
+  mongo-data:
+    driver: local

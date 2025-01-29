@@ -3,11 +3,11 @@ package com.example.task_manager.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.example.task_manager.entity.entity_enum.ROLE;
 
-import jakarta.persistence.Id;
 
 @Document
 public class User {

@@ -2,10 +2,10 @@ package com.example.task_manager.entity;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.example.task_manager.entity.entity_enum.TASK_STATUS;
 
-import jakarta.persistence.Id;
 
 @Document
 public class Task {
